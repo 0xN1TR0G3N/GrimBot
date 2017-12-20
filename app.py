@@ -2,8 +2,7 @@ import discord
 from discord.ext import commands
 import requests
 import json
-import re
-import random
+import shlex
 
 API_URL = "https://api.coinmarketcap.com/v1/ticker/grimcoin/?convert=JPY"
 client = discord.Client()
@@ -15,7 +14,7 @@ def current_price():
 
 def talk(message):
     payload = {
-        'apikey':'key',
+        'apikey':'apikey',
         'query':message
     }
     r = requests.post('https://api.a3rt.recruit-tech.co.jp/talk/v1/smalltalk', data=payload).json()
@@ -32,9 +31,9 @@ async def on_ready():
 async def on_message(message):
     if client.user != message.author:
         split = message.content.split()
-        """ いくらコマンド """
 
-        if split[0].find("?いくら") != -1 or split[0].find("？いくら") != -1:
+        """ いくらコマンド """
+        if split[0].startswith("?いくら") or split[0].startswith("？いくら"):
             if len(split) == 1:
                 m = str(message.author.mention) + " " + "1GRIMは" + str(current_price()) + "円です！"
                 await client.send_message(message.channel, m)
@@ -43,9 +42,18 @@ async def on_message(message):
                     str(split[1]) + "GRIMは" + str(float(current_price()) * float(split[1])) + "円です！"
                 await client.send_message(message.channel, m)
 
+        """ イクラコマンド """
+        if split[0].startswith("?イクラ") or split[0].startswith("？イクラ"):
+            if len(split) == 1:
+                m = "それはイクラです"
+                await client.send_message(message.channel, m)
+            elif split[1].isdigit():
+                m = "それはイクラです"
+                await client.send_message(message.channel, m)
+
         """ トークコマンド """
         if split[0].find("?トーク") != -1 or split[0].find("？トーク") != -1:
-            m = "@" + str(message.author) + " " + talk(split[1])
+            m = str(message.author.mention) + " " + talk(split[1])
             await client.send_message(message.channel, m)
 
-client.run("token")
+client.run("TOKEN")
