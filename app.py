@@ -36,11 +36,11 @@ async def on_message(message):
 
         if split[0].find("?いくら") != -1 or split[0].find("？いくら") != -1:
             if len(split) == 1:
-                m = "@" + str(message.author) + " " + "1GRIMは" + str(current_price()) + "円ですよん"
+                m = str(message.author.mention) + " " + "1GRIMは" + str(current_price()) + "円です！"
                 await client.send_message(message.channel, m)
             elif split[1].isdigit():
-                m = "@" + str(message.author) + " " + \
-                    str(split[1]) + "GRIMは" + str(float(current_price()) * float(split[1])) + "円ですよん"
+                m = str(message.author.mention) + " " + \
+                    str(split[1]) + "GRIMは" + str(float(current_price()) * float(split[1])) + "円です！"
                 await client.send_message(message.channel, m)
 
         """ トークコマンド """
