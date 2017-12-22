@@ -5,5 +5,5 @@ class APIConnector:
     def get_balance(token : str, id : str) -> float:
         return 1000.12
 
-    def send(token : str, id : str, sendTo : str) -> bool:
+    def send(token : str, id : str, sendTo : str, amount : int) -> bool:
         return True

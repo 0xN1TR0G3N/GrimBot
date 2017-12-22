@@ -11,18 +11,17 @@ class RainCommand(Command):
             await client.send_message(message.channel, "配布金額が残高を超えています!")
             return
 
-        addressDict = dict()
+        addresses = list()
         for member in message.server.members:
             if member.status == discord.Status.online:
                 address = APIConnector.get_address("", member.id)
                 if address is not None:
-                    addressDict.update({member.id: address})
+                    addresses.append(address)
 
-        pricePerOne = amount / len(addressDict)
+        pricePerOne = amount / len(addresses)
 
-        for memberId in addressDict:
-            address = addressDict[memberId]
-            APIConnector.send("", message.author.id, address)
+        for address in addresses:
+            APIConnector.send("", message.author.id, address, pricePerOne)
 
         await client.send_message(message.channel, "%f Grimを%d人に、一人あたり%f Grimずつ送りました!" % (amount, len(addressDict), pricePerOne))
 
