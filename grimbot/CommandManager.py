@@ -1,6 +1,5 @@
 import discord
 
-
 class CommandManager():
 
     commands = list()

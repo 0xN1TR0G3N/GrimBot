@@ -6,11 +6,11 @@ from abc import ABCMeta, abstractmethod
 class ArgsPatternPart(metaclass=ABCMeta):
 
     @abstractmethod
-    def argsLength(self) -> int:
+    def numberOfArgs(self) -> int:
         raise NotImplementedError()
 
     @abstractmethod
-    def isMatch(self, args : Sequence[str], index : int) -> bool:
+    def validateArg(self, args : Sequence[str], index : int) -> bool:
         raise NotImplementedError()
 
 
@@ -34,10 +34,10 @@ class CommandArgsPatternDoesntMatchException(Exception):
 
 class NumberArgsPattern(ArgsPatternPart):
 
-    def argsLength(self):
+    def numberOfArgs(self):
         return 1
 
-    def isMatch(self, args : Sequence[str], index : int):
+    def validateArg(self, args : Sequence[str], index : int):
         try:
             float(args[0])
         except ValueError:
@@ -48,10 +48,10 @@ class NumberArgsPattern(ArgsPatternPart):
 
 class PositiveNumberArgsPattern(ArgsPatternPart):
 
-    def argsLength(self):
+    def numberOfArgs(self):
         return 1
 
-    def isMatch(self, args : Sequence[str], index : int):
+    def validateArg(self, args : Sequence[str], index : int):
         try:
             f = float(args[0])
             if f <= 0:
@@ -67,10 +67,10 @@ class StringArgsPattern(ArgsPatternPart):
     def __init__(self, s : str):
         self.s = s
 
-    def argsLength(self):
+    def numberOfArgs(self):
         return 1
 
-    def isMatch(self, args : Sequence[str], index : int):
+    def validateArg(self, args : Sequence[str], index : int):
         if args[0] != self.s:
             raise CommandArgsPatternDoesntMatchException("%d番目の引数は「%s」である必要があります!" % (index + 1, self.s))
         return True
@@ -82,10 +82,10 @@ class RegexArgsPattern(ArgsPatternPart):
         self.regex = re.compile(regexStr)
         self.errMessage = errorMessage
 
-    def argsLength(self):
+    def numberOfArgs(self):
         return 1
 
-    def isMatch(self, args : Sequence[str], index : int):
+    def validateArg(self, args : Sequence[str], index : int):
         if not self.regex.match(args[0]):
             raise CommandArgsPatternDoesntMatchException("%d番目の引数に問題があります! - %s" % (index + 1, self.errMessage))
         return True

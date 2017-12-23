@@ -19,32 +19,31 @@ class Command(metaclass=ABCMeta):
         cmdSplited = cmdStr.split(" ")
         if len(cmdSplited) == 0:
             raise AssertionError()
+
         cmdLabel = cmdSplited[0]
         if cmdLabel != self.cmdLabel:
             return False
 
         args = cmdSplited[1:]
 
-        if self.requiredArgsLength() > len(args):
-            raise CommandLengthDoesntMatchException(self.requiredArgsLength())
+        if len(args) < self.requiredNumberOfArgs():
+            raise CommandLengthDoesntMatchException(self.requiredNumberOfArgs())
 
         index = 0
         for argsPattern in self.argsPatternParts:
-            if argsPattern.argsLength != -1:
-                if argsPattern.isMatch(args[index:index + argsPattern.argsLength()], index):
-                    pass # 一致しなければ例外が発生するのでそれにまかせる
-                index += argsPattern.argsLength()
+            if argsPattern.numberOfArgs != -1:
+                argsPattern.validateArg(args[index:index + argsPattern.numberOfArgs()], index)
+                index += argsPattern.numberOfArgs()
             else:
-                if argsPattern.isMatch(args[index:]):
-                    pass # 一致しなければ例外が発生するのでそれにまかせる
+                argsPattern.validateArg(args[index:])
 
         return True
 
-    def requiredArgsLength(self) -> int:
+    def requiredNumberOfArgs(self) -> int:
         sum = 0
         for argsPattern in self.argsPatternParts:
-            if argsPattern.argsLength != -1:
-                sum += argsPattern.argsLength()
+            if argsPattern.numberOfArgs != -1:
+                sum += argsPattern.numberOfArgs()
         return sum
 
 
