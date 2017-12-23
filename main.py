@@ -23,4 +23,4 @@ cmdManager.commands.append(
     )
 )
 
-client.run('MzkzNTcwMzQzODAyODk2Mzg1.DR3s9Q.t6VyMgrZTCWaVIvz9rWRw0ggnaU')
+client.run('MzkzOTczODgxODg4NzAyNDY2.DR9kSQ.Sz8lXQb3DshzMTOiKSKSN9uqdIY')
