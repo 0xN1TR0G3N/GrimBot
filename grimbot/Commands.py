@@ -58,7 +58,7 @@ class RainCommand(Command):
         addresses = list()
         for member in message.server.members:
             if member.status == discord.Status.online:
-                address = APIConnector.get_address("", member.id)
+                address = APIConnector.address("", member.id)
                 if address is not None:
                     addresses.append(address)
 
@@ -70,6 +70,6 @@ class RainCommand(Command):
         await client.send_message(message.channel, "%f Grimを%d人に、一人あたり%f Grimずつ送りました!" % (amount, len(addresses), pricePerOne))
 
     def balanceIsMoreThan(self, id : str, amount : float):
-        if APIConnector.get_balance("", id) >= amount:
+        if APIConnector.balance("", id) >= amount:
             return True
         return False
