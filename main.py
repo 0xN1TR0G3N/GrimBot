@@ -23,4 +23,14 @@ cmdManager.commands.append(
     )
 )
 
+cmdManager.commands.append(
+    grimbot.PriceCommand(
+        "info",
+        [
+            grimbot.PositiveNumberArgsPattern(numberOfArgs=-1)
+        ]
+    )
+)
+
+
 client.run('MzkzOTczODgxODg4NzAyNDY2.DR9kSQ.Sz8lXQb3DshzMTOiKSKSN9uqdIY')

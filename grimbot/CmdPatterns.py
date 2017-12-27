@@ -34,12 +34,16 @@ class CommandArgsPatternDoesntMatchException(Exception):
 
 class NumberArgsPattern(ArgsPatternPart):
 
+    def __init__(self, numberOfArgs=1):
+        self.numberOfArgs = numberOfArgs
+
     def numberOfArgs(self):
-        return 1
+        return self.numberOfArgs
 
     def validateArg(self, args : Sequence[str], index : int):
         try:
-            float(args[0])
+            for arg in args:
+                float(args[0])
         except ValueError:
             raise CommandArgsPatternDoesntMatchException("%d番目の引数が数値ではありません!" % (index + 1))
         else:
@@ -48,14 +52,18 @@ class NumberArgsPattern(ArgsPatternPart):
 
 class PositiveNumberArgsPattern(ArgsPatternPart):
 
+    def __init__(self, numberOfArgs=1):
+        self.numberOfArgs = numberOfArgs
+
     def numberOfArgs(self):
-        return 1
+        return self.numberOfArgs
 
     def validateArg(self, args : Sequence[str], index : int):
         try:
-            f = float(args[0])
-            if f <= 0:
-                raise ValueError()
+            for arg in args:
+                f = float(args[0])
+                if f <= 0:
+                    raise ValueError()
         except ValueError:
             raise CommandArgsPatternDoesntMatchException("%d番目の引数が正の数値ではありません!" % (index + 1))
         else:

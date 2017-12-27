@@ -1,8 +1,8 @@
 import discord
-from typing import Sequence
 from .APIConnector import *
 from abc import abstractmethod, ABCMeta
 from .CmdPatterns import CommandLengthDoesntMatchException, ArgsPatternPart
+import requests
 
 
 class Command(metaclass=ABCMeta):
@@ -35,7 +35,7 @@ class Command(metaclass=ABCMeta):
                 argsPattern.validateArg(args[index:index + argsPattern.numberOfArgs()], index)
                 index += argsPattern.numberOfArgs()
             else:
-                argsPattern.validateArg(args[index:])
+                argsPattern.validateArg(args[index:], index)
 
         return True
 
@@ -73,3 +73,17 @@ class RainCommand(Command):
         if APIConnector.balance("", id) >= amount:
             return True
         return False
+
+
+class PriceCommand(Command):
+    API_URL = "https://api.coinmarketcap.com/v1/ticker/grimcoin/?convert=JPY"
+
+    def current_price(self) -> float:
+        headers = {"content-type": "application/json"}
+        data = requests.get(self.API_URL, headers=headers).json()
+        return float(data[0]['price_jpy'])
+
+    async def execute(self, args : Sequence[str], client, message : discord.Message):
+        amount = float(args[0]) if len(args) > 0 else 1
+        price = self.current_price()
+        await client.send_message(message.channel, str(amount) + "GRIMは" + str(amount*price) + "円です!")
