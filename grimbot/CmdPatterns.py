@@ -42,10 +42,12 @@ class NumberArgsPattern(ArgsPatternPart):
 
     def validateArg(self, args : Sequence[str], index : int):
         try:
+            i = 0
             for arg in args:
-                float(args[0])
+                float(arg)
+            i += 1
         except ValueError:
-            raise CommandArgsPatternDoesntMatchException("%d番目の引数が数値ではありません!" % (index + 1))
+            raise CommandArgsPatternDoesntMatchException("%d番目の引数が数値ではありません!" % (index + i + 1))
         else:
             return True
 
@@ -60,12 +62,14 @@ class PositiveNumberArgsPattern(ArgsPatternPart):
 
     def validateArg(self, args : Sequence[str], index : int):
         try:
+            i = 0
             for arg in args:
-                f = float(args[0])
+                f = float(arg)
                 if f <= 0:
                     raise ValueError()
+                i += 1
         except ValueError:
-            raise CommandArgsPatternDoesntMatchException("%d番目の引数が正の数値ではありません!" % (index + 1))
+            raise CommandArgsPatternDoesntMatchException("%d番目の引数が正の数値ではありません!" % (index + i + 1))
         else:
             return True
 

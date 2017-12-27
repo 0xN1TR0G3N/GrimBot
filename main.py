@@ -25,7 +25,7 @@ cmdManager.commands.append(
 
 cmdManager.commands.append(
     grimbot.PriceCommand(
-        "info",
+        "grim",
         [
             grimbot.PositiveNumberArgsPattern(numberOfArgs=-1)
         ]
