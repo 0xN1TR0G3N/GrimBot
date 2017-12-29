@@ -16,8 +16,9 @@ class ArgsPatternPart(metaclass=ABCMeta):
 
 # コマンドの引数の長さが一致しなかった時に発生させる例外です
 class CommandLengthDoesntMatchException(Exception):
-    def __init__(self, length : int):
+    def __init__(self, length : int, help : str):
         self.length = length
+        self.help = help
 
     def __str__(self):
         return "このコマンドは、少なくとも%d個の引数が必要です!" % self.length
@@ -34,11 +35,11 @@ class CommandArgsPatternDoesntMatchException(Exception):
 
 class NumberArgsPattern(ArgsPatternPart):
 
-    def __init__(self, numberOfArgs=1):
-        self.numberOfArgs = numberOfArgs
+    def __init__(self, numberOfArgs_=1):
+        self.numberOfArgs_ = numberOfArgs_
 
     def numberOfArgs(self):
-        return self.numberOfArgs
+        return self.numberOfArgs_
 
     def validateArg(self, args : Sequence[str], index : int):
         try:
@@ -54,11 +55,11 @@ class NumberArgsPattern(ArgsPatternPart):
 
 class PositiveNumberArgsPattern(ArgsPatternPart):
 
-    def __init__(self, numberOfArgs=1):
-        self.numberOfArgs = numberOfArgs
+    def __init__(self, numberOfArgs_=1):
+        self.numberOfArgs_ = numberOfArgs_
 
     def numberOfArgs(self):
-        return self.numberOfArgs
+        return self.numberOfArgs_
 
     def validateArg(self, args : Sequence[str], index : int):
         try:
@@ -69,7 +70,7 @@ class PositiveNumberArgsPattern(ArgsPatternPart):
                     raise ValueError()
                 i += 1
         except ValueError:
-            raise CommandArgsPatternDoesntMatchException("%d番目の引数が正の数値ではありません!" % (index + i + 1))
+            raise CommandArgsPatternDoesntMatchException("%d番目の引数が正の数値ではありません!" % (index + 1))
         else:
             return True
 
