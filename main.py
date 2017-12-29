@@ -7,6 +7,8 @@ cmdManager = grimbot.CommandManager("!")
 
 @client.event
 async def on_message(message: discord.Message):
+    if len(message.content) == 0:
+        return
     try:
         await cmdManager.execute(message.content, client, message)
     except grimbot.CommandArgsPatternDoesntMatchException as ex:

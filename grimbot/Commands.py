@@ -4,6 +4,7 @@ from abc import abstractmethod, ABCMeta
 from .CmdPatterns import CommandLengthDoesntMatchException, ArgsPatternPart
 import requests
 from .FXCalculator import *
+from DiscordUtil import *
 
 token = "wLL3BnrAJq68pqkEZ8qdtUAhYQxfUT"
 
@@ -112,8 +113,8 @@ class BalanceCommand(Command):
 class WithdrawCommand(Command):
     async def execute(self, args : Sequence[str], client, message : discord.Message):
         try:
-            amount = APIConnector.send(token, message.author.id, args[0], float(args[1]))
-            await client.send_message(message.channel, "You send %f GRIM to %s" % (amount, args[0]))
+            APIConnector.send(token, message.author.id, args[0], float(args[1]))
+            await client.send_message(message.channel, "You send %f GRIM to %s" % (float(args[1]), args[0]))
         except APIError as err:
             await client.send_message(message.channel, "ERROR: %s" % err.message)
 
@@ -125,8 +126,13 @@ class WithdrawCommand(Command):
 class TipCommand(Command):
     async def execute(self, args : Sequence[str], client, message : discord.Message):
         try:
-            APIConnector.tip(token, message.author.id, args[0], float(args[1]))
-            await client.send_message(message.channel, "You send %f GRIM to %s" % (float(args[1]), args[0]))
+            toId = getIdFromName(message.server, args[0])
+            if toId != "":
+                APIConnector.tip(token, message.author.id, toId, float(args[1]))
+                await mention(client, message.channel, message.author.name, "You send %f GRIM to %s" % (float(args[1]), args[0]))
+                await mention(client, message.channel, args[0], "You received %f GRIM from %s" % (float(args[1]), args[0]))
+            else:
+                await client.send_message(message.channel, "%s doesn't join this server!" % args[0])
         except APIError as err:
             await client.send_message(message.channel, "ERROR: %s" % err.message)
 

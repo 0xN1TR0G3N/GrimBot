@@ -38,7 +38,7 @@ class APIConnector:
                 "id": id
             }
         ))
-        if data["status"] != 0:
+        if data["status"] != APIConnector.Status.SUCCESS.value:
             raise APIError(data["message"])
         if len(data["result"]) == 0:
             return ""
