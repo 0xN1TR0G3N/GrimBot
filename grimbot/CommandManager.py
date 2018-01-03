@@ -14,6 +14,8 @@ class CommandManager():
 
         cmdStr = cmdStr[1:]
         for command in self.commands:
+            if command.roomList is not None and not message.channel.name in command.roomList:
+                continue
             if command.isMatch(cmdStr):
                 await command.execute(cmdStr.split(" ")[1:], client, message)
                 return True

@@ -1,9 +1,11 @@
 import discord
 import grimbot
+import aiohttp
+import ssl
 
-client = discord.Client()
+client = discord.Client(connector=aiohttp.TCPConnector(verify_ssl=False))
 
-cmdManager = grimbot.CommandManager("!")
+cmdManager = grimbot.CommandManager(",")
 
 @client.event
 async def on_message(message: discord.Message):
@@ -19,29 +21,34 @@ async def on_message(message: discord.Message):
 
 cmdManager.commands.append(
     grimbot.CreateCommand(
-        "create",
-        []
+        "register",
+        [],
+        ['fiat_bot', 'register_room']
     )
 )
+
 
 cmdManager.commands.append(
     grimbot.AddressCommand(
         "address",
-        []
+        [],
+        ['fiat_bot', 'address_deposit_room']
     )
 )
 
 cmdManager.commands.append(
     grimbot.DepositCommand(
         "deposit",
-        []
+        [],
+        ['fiat_bot', 'address_deposit_room']
     )
 )
 
 cmdManager.commands.append(
     grimbot.BalanceCommand(
         "balance",
-        []
+        [],
+        ['fiat_bot', 'balance_room']
     )
 )
 
@@ -51,7 +58,8 @@ cmdManager.commands.append(
         [
             grimbot.RegexArgsPattern("G[a-zA-Z0-9]{23}", "アドレスの形式が不正です!"),
             grimbot.PositiveNumberArgsPattern()
-        ]
+        ],
+        ['fiat_bot']
     )
 )
 
@@ -61,7 +69,8 @@ cmdManager.commands.append(
         [
             grimbot.RegexArgsPattern(".*", ""),
             grimbot.PositiveNumberArgsPattern()
-        ]
+        ],
+        ['fiat_bot', 'tip_room']
     )
 )
 
@@ -70,16 +79,8 @@ cmdManager.commands.append(
         "rain",
         [
             grimbot.PositiveNumberArgsPattern()
-        ]
-    )
-)
-
-cmdManager.commands.append(
-    grimbot.PriceCommand(
-        "grim",
-        [
-            grimbot.PositiveNumberArgsPattern(numberOfArgs_=-1)
-        ]
+        ],
+        ['rain_room']
     )
 )
 
@@ -99,4 +100,24 @@ cmdManager.commands.append(
     )
 )
 
-client.run('MzkzOTczODgxODg4NzAyNDY2.DR9kSQ.Sz8lXQb3DshzMTOiKSKSN9uqdIY')
+cmdManager.commands.append(
+    grimbot.PriceCommand(
+        "grim",
+        [
+            grimbot.PositiveNumberArgsPattern(numberOfArgs_=-1)
+        ],
+        ['fiat_bot']
+    )
+)
+
+cmdManager.commands.append(
+    grimbot.TalkCommand(
+        "talk",
+        [
+            grimbot.RegexArgsPattern(".*", "")
+        ],
+        ['fiat_bot']
+    )
+)
+
+client.run('Mzk3MzY0NjgxMDAzNjMwNTky.DSu6Ng.Uel-GVoa8gXKWi9JM8eli5HaCiI')
