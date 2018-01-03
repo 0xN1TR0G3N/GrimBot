@@ -1,13 +1,15 @@
-import discord
-from discord.embeds import *
-from .APIConnector import *
+import json
 from abc import abstractmethod, ABCMeta
-from .CmdPatterns import CommandLengthDoesntMatchException, ArgsPatternPart
+
+import discord
 import requests
-from .FXCalculator import *
 from DiscordUtil import *
 from GrimUtil import *
-import json
+from discord.embeds import *
+
+from .APIConnector import *
+from .CmdPatterns import CommandLengthDoesntMatchException, ArgsPatternPart
+from .FXCalculator import *
 
 token = open('grimapi_token.txt').readline()
 docomo_api_url = "https://api.apigw.smt.docomo.ne.jp/dialogue/v1/dialogue?APIKEY="

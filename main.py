@@ -1,7 +1,8 @@
+import ssl
+
+import aiohttp
 import discord
 import grimbot
-import aiohttp
-import ssl
 
 client = discord.Client(connector=aiohttp.TCPConnector(verify_ssl=False))
 
