@@ -10,11 +10,15 @@ from discord.embeds import *
 from .APIConnector import *
 from .CmdPatterns import CommandLengthDoesntMatchException, ArgsPatternPart
 from .FXCalculator import *
+import logging
+from Translator import *
 
 token = open('grimapi_token.txt').readline()
 docomo_api_url = "https://api.apigw.smt.docomo.ne.jp/dialogue/v1/dialogue?APIKEY="
 docomo_api_key = open('docomoapi_token.txt').readline()
 
+print('Web API Token: %s' % (token[0:3] + '*' * 20))
+print('Docomo API Token: %s' % (docomo_api_key[0:3] + '*' * 20))
 
 class Command(metaclass=ABCMeta):
     def __init__(self, cmdLabel: str, argsPatternParts: Sequence[ArgsPatternPart], roomList : Sequence[str] = None):
@@ -124,7 +128,7 @@ class BalanceCommand(Command):
         try:
             toId = getIdFromName(message.server, message.author.name)
             if toId != "":
-                priceJPY = current_price_jpy()
+                priceJPY = await current_price_jpy()
                 balance = APIConnector.balance(token, message.author.id)
                 embed = Embed(description='<@%s>の"所持GRIM数"を表示するわ。' % (toId), type='rich', colour=0x6666FF)
                 embed.add_field(name='GRIM所持数', value='%.04f GRIM' % balance, inline=True)
@@ -208,8 +212,8 @@ class RainCommand(Command):
 class PriceCommand(Command):
     async def execute(self, args: Sequence[str], client, message: discord.Message):
         amount = float(args[0]) if len(args) > 0 else 1
-        price = current_price_jpy()
-        priceBTC = current_price_btc()
+        price = await current_price_jpy()
+        priceBTC = await current_price_btc()
         embed = Embed(description='「そう。私に読めるのは"GRIM"の価値だけ」', type='rich', colour=0x6666FF)
         embed.add_field(name="GRIM/BTC", value="%.10f BTC" % priceBTC, inline=True)
         embed.add_field(name="GRIM/JPY", value="%.10f JPY" % price, inline=True)
@@ -256,3 +260,19 @@ class TalkCommand(Command):
 
     def help(self):
         return ",talk (contents) - ぐりむちゃんと会話します"
+
+
+class TranslateJPIntoENCommand(Command):
+    async def execute(self, args: Sequence[str], client, message: discord.Message):
+        await mention(client, message.channel, message.author.name, translate(' '.join(args), 'jp', 'en'))
+
+    def help(self):
+        return ',trjp (japanese) - 日本語から英語に翻訳します'
+
+
+class TranslateENIntoJPCommand(Command):
+    async def execute(self, args: Sequence[str], client, message: discord.Message):
+        await mention(client, message.channel, message.author.name, translate(' '.join(args), 'en', 'jp'))
+
+    def help(self):
+        return ',tren (english) - 英語から日本語に翻訳します'

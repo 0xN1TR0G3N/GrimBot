@@ -3,6 +3,8 @@ import ssl
 import aiohttp
 import discord
 import grimbot
+import logging
+import traceback
 
 client = discord.Client(connector=aiohttp.TCPConnector(verify_ssl=False))
 
@@ -19,6 +21,8 @@ async def on_message(message: discord.Message):
     except grimbot.CommandLengthDoesntMatchException as ex:
         await client.send_message(message.channel, str(ex))
         await client.send_message(message.channel, "HELP: " + ex.help)
+    except Exception:
+        print(traceback.format_exc())
 
 cmdManager.commands.append(
     grimbot.CreateCommand(
@@ -120,5 +124,26 @@ cmdManager.commands.append(
         ['fiat_bot']
     )
 )
+
+cmdManager.commands.append(
+    grimbot.TranslateJPIntoENCommand(
+        "trjp",
+        [
+            grimbot.RegexArgsPattern('.*', '')
+        ]
+    )
+)
+
+cmdManager.commands.append(
+    grimbot.TranslateENIntoJPCommand(
+        "tren",
+        [
+            grimbot.RegexArgsPattern('.*', '')
+        ]
+    )
+)
+
+print('GRIM Bot has started.')
+print('Commands: %s' % (cmdManager.commands))
 
 client.run('Mzk3MzY0NjgxMDAzNjMwNTky.DSu6Ng.Uel-GVoa8gXKWi9JM8eli5HaCiI')
