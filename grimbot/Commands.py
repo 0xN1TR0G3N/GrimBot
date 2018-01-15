@@ -135,6 +135,7 @@ class BalanceCommand(Command):
                 embed.add_field(name='日本円換算', value='%0.04f 円' % (priceJPY * balance), inline=True)
                 await client.send_message(message.channel, embed=embed)
         except APIError as err:
+            print(err.status.value.status_code)
             await client.send_message(message.channel, "ERROR: %s" % err.message)
 
     def help(self):

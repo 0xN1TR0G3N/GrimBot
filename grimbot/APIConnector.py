@@ -129,6 +129,7 @@ class APIConnector:
 
     class Status(enum.Enum):
         SUCCESS = '0'
+        TMP = '1'
         AUTH_FAILED = 'G-0'
         INTERNAL_ERROR = 'G-1'
         INSUFFICIENT_ARGS = 'G-2'
