@@ -240,14 +240,6 @@ class FXCalcCommand(Command):
         return ",fx lev (amount)x(magnitude) (currency) (beforePrice) to (afterPrice) with (L/S) - レバレッジをかけた時の利益と利益率を計算します"
 
 
-class CompareRealRateToCalculatedRate(Command):
-    async def execute(self, args: Sequence[str], client, message: discord.Message):
-        await client.send_message(message.channel, "倍率: %f" % float())
-
-    def help(self):
-        return ",comprate (currency) - 計算上のレートと、実際のレートを比較します。 (結果) = {(時価総額) / (発行枚数)}÷(実際のレート)"
-
-
 class TalkCommand(Command):
 
     context_dic = {}

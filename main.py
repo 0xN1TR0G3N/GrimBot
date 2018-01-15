@@ -5,15 +5,21 @@ import discord
 import grimbot
 import logging
 import traceback
+from GrimChanThrower import GrimChanThrower, ServerCommandsLoader
 
 client = discord.Client(connector=aiohttp.TCPConnector(verify_ssl=False))
 
 cmdManager = grimbot.CommandManager(",")
 
+thrower = GrimChanThrower()
+
 @client.event
 async def on_message(message: discord.Message):
     if len(message.content) == 0:
         return
+
+    thrower.transferIfMatched(message.content, message.server.id)
+
     try:
         await cmdManager.execute(message.content, client, message)
     except grimbot.CommandArgsPatternDoesntMatchException as ex:
@@ -145,5 +151,7 @@ cmdManager.commands.append(
 
 print('GRIM Bot has started.')
 print('Commands: %s' % (cmdManager.commands))
+
+thrower.serverCommandsList = ServerCommandsLoader.loadsFrom('./GrimChanThrowerServers')
 
 client.run('Mzk3MzY0NjgxMDAzNjMwNTky.DSu6Ng.Uel-GVoa8gXKWi9JM8eli5HaCiI')
