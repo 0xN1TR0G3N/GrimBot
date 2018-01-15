@@ -4,7 +4,7 @@ from abc import abstractmethod, ABCMeta
 import discord
 import requests
 from DiscordUtil import *
-from GrimUtil import *
+from VCurrencyUtil import *
 from discord.embeds import *
 
 from .APIConnector import *
@@ -128,7 +128,7 @@ class BalanceCommand(Command):
         try:
             toId = getIdFromName(message.server, message.author.name)
             if toId != "":
-                priceJPY = await current_price_jpy()
+                priceJPY = await current_price_jpy('grimcoin')
                 balance = APIConnector.balance(token, message.author.id)
                 embed = Embed(description='<@%s>の"所持GRIM数"を表示するわ。' % (toId), type='rich', colour=0x6666FF)
                 embed.add_field(name='GRIM所持数', value='%.04f GRIM' % balance, inline=True)
@@ -213,8 +213,8 @@ class RainCommand(Command):
 class PriceCommand(Command):
     async def execute(self, args: Sequence[str], client, message: discord.Message):
         amount = float(args[0]) if len(args) > 0 else 1
-        price = await current_price_jpy()
-        priceBTC = await current_price_btc()
+        price = await current_price_jpy('grimcoin')
+        priceBTC = await current_price_btc('grimcoin')
         embed = Embed(description='「そう。私に読めるのは"GRIM"の価値だけ」', type='rich', colour=0x6666FF)
         embed.add_field(name="GRIM/BTC", value="%.10f BTC" % priceBTC, inline=True)
         embed.add_field(name="GRIM/JPY", value="%.10f JPY" % price, inline=True)
@@ -238,6 +238,14 @@ class FXCalcCommand(Command):
 
     def help(self):
         return ",fx lev (amount)x(magnitude) (currency) (beforePrice) to (afterPrice) with (L/S) - レバレッジをかけた時の利益と利益率を計算します"
+
+
+class CompareRealRateToCalculatedRate(Command):
+    async def execute(self, args: Sequence[str], client, message: discord.Message):
+        await client.send_message(message.channel, "倍率: %f" % float())
+
+    def help(self):
+        return ",comprate (currency) - 計算上のレートと、実際のレートを比較します。 (結果) = {(時価総額) / (発行枚数)}÷(実際のレート)"
 
 
 class TalkCommand(Command):
