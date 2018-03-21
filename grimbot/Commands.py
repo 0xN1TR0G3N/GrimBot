@@ -1,4 +1,6 @@
 import json
+import random
+import asyncio
 from abc import abstractmethod, ABCMeta
 
 import discord
@@ -135,7 +137,6 @@ class BalanceCommand(Command):
                 embed.add_field(name='日本円換算', value='%0.04f 円' % (priceJPY * balance), inline=True)
                 await client.send_message(message.channel, embed=embed)
         except APIError as err:
-            print(err.status.value.status_code)
             await client.send_message(message.channel, "ERROR: %s" % err.message)
 
     def help(self):
@@ -277,3 +278,72 @@ class TranslateENIntoJPCommand(Command):
 
     def help(self):
         return ',tren (english) - 英語から日本語に翻訳します'
+
+class Mine29Command(Command):
+    async def execute(self, args: Sequence[str], client, message: discord.Message):
+        arr = [
+            "何よりも大切に思っていた それなのに",
+            "あの星は君のものだよ愛してる",
+            "もう寝るとラインしたのに返事待つ",
+            "悲しげに見上げる空は雪が舞う",
+            "冬靄に恋しき人の影を見る",
+            "さようならこれが正しい道なんだ",
+            "今言えるあの日の嘘は君のため",
+            "思い出は君が残した笑顔だけ",
+            "飛び越えてしまえばいっそ楽なのに",
+            "その場所は私がいた本当は私がいた場所",
+            "溶けるように少しずつ-少しずつ死んでゆく世界",
+            "呼んでくれ 最後の最後に 僕の名を",
+            "名を持たぬ 小さな花を 君と呼ぶ",
+        ]
+        index = random.randint(0, len(arr) - 1)
+        if index == 0:
+            await client.send_message(message.channel, arr[index])
+            await asyncio.sleep(5)
+            await client.send_message(message.channel, '祝福の拍手が 今2人を輝かせていく')
+            await asyncio.sleep(5)
+            await client.send_message(message.channel, '恋人と呼んでいたあの人が幸せそうに笑ってる')
+            await asyncio.sleep(5)
+            message = await client.send_message(message.channel, 'それなのに不倫♪')
+            for i in range(0, 30):
+                await client.edit_message(message, 'それなのに不倫')
+                await asyncio.sleep(1)
+                await client.edit_message(message, '♪それなのに不倫♪')
+                await asyncio.sleep(1)
+        else:
+            await client.send_message(message.channel, arr[index])
+
+    def help(self):
+        return ',mine29 - みねにきの詩'
+
+
+class ProfileCommand(Command):
+    async def execute(self, args: Sequence[str], client, message: discord.Message):
+        arr = [
+            "パンティ：逆神の人",
+            "いなご：100万が1000円になった人",
+            "私です：仕手での損を2度回避し運を使い果たしFXで死んだ人",
+            "ハム兵：キチガイ。エロゲVRの人",
+            "ゴリラ：今は亡きマスコットの人",
+            "ミネ：不倫トレーダー。リップルの最後の光。ゆみ。",
+            "hakumai：また負けた。JKリフレの人",
+            "ひよこ：旦那の金を溶かした人妻",
+            "ガイジ犬：ゴリラに代わるマスコットの人",
+            "しろっこ：2000万溶かしてもキャバクラにいけるニュータイプ",
+            "FUJINO：何でも責任屋さん",
+            "ぬまろん：強い童貞",
+            "hide：お金持ち",
+            "boko：天才エンジニアでjpyマイニング能力高い。最大の失敗は仮想通貨を始めたこと。***性欲の化身***",
+            "vip：借金して仮想通貨・離婚裁判でぼこぼこの弁護士",
+            "はむちゃん：ネカマのホモ",
+            "kH7144：xpキッズルーム住人の危険分子",
+            "Hino：DMM同人10円セール乞食",
+            "ぱこ：BGMbotを作り間接的に催眠CDを流す大罪人",
+            "ニトロ：仮想通貨よりマインクラフトで地面掘ってる人",
+            "wintermaples：bokoの右腕。大学1年に仮想通貨始めた。センター試験物理でコケた人",
+        ]
+        index = random.randint(0, len(arr) - 1)
+        await client.send_message(message.channel, arr[index])
+
+    def help(self):
+        return ',profile - ランダムでプロフィールを表示するよ!'

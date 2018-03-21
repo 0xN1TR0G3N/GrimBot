@@ -13,12 +13,17 @@ cmdManager = grimbot.CommandManager(",")
 
 thrower = GrimChanThrower()
 
+wordList = ['ゆみ', '亀山', '三重', 'yumi', 'うんち']
+
 @client.event
 async def on_message(message: discord.Message):
     if len(message.content) == 0:
         return
 
     thrower.transferIfMatched(message.content, message.server.id)
+
+    if any([(word in message.content) for word in wordList]):
+        await client.add_reaction(message, '💩')
 
     try:
         await cmdManager.execute(message.content, client, message)
@@ -81,7 +86,7 @@ cmdManager.commands.append(
             grimbot.RegexArgsPattern(".*", ""),
             grimbot.PositiveNumberArgsPattern()
         ],
-        ['fiat_bot', 'tip_room']
+        ['fiat_bot', 'tip_room', 'event_room']
     )
 )
 
@@ -146,6 +151,22 @@ cmdManager.commands.append(
         [
             grimbot.RegexArgsPattern('.*', '')
         ]
+    )
+)
+
+cmdManager.commands.append(
+    grimbot.Mine29Command(
+        "mine29",
+        [],
+        ['chat_room']
+    )
+)
+
+cmdManager.commands.append(
+    grimbot.ProfileCommand(
+        "profile",
+        [],
+        ['chat_room']
     )
 )
 
